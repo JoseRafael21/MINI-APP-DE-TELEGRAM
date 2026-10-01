@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Academy - Inmersivo</title>
+    <title>Crypto Academy</title>
     <style>
         :root {
-            --bg-color: #111216;
-            --card-bg: #1c1f26;
-            --accent-color: #00ff88;
-            --text-color: #ffffff;
-            --secondary-text: #8e9099;
-            --live-color: #ff3344;
+            --bg-color: #111116;
+            --card-bg: #1B1E29;
+            --accent-color: #FF00FF;
+            --text-color: #FFFFFF;
+            --secondary-text: #8E9099;
+            --live-color: #FF3344;
+            --border-gradient: linear-gradient(90deg, #FF00FF, #00FFFF, #FF9900);
         }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
         }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -29,41 +31,48 @@
             min-height: 100vh;
             padding: 20px;
         }
-        header {
+
+        .container {
             width: 100%;
             max-width: 500px;
-            margin-bottom: 15px;
+        }
+
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
         }
-        h1 {
-            font-size: 20px;
+
+        .logo {
             font-weight: bold;
+            font-size: 20px;
         }
+
         .live-badge {
             background-color: var(--live-color);
             color: var(--text-color);
-            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
             font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 6px;
             text-transform: uppercase;
         }
-        .main-video-container {
-            width: 100%;
-            max-width: 500px;
-            background-color: var(--card-bg);
+
+        .video-card {
+            background: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
+            border: 1px solid #2D3142;
         }
+
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
             height: 0;
         }
+
         .video-wrapper iframe {
             position: absolute;
             top: 0;
@@ -72,87 +81,79 @@
             height: 100%;
             border: none;
         }
-        .video-info {
+
+        .card-info {
             padding: 15px;
         }
-        .video-title {
+
+        .card-info h2 {
             font-size: 18px;
-            font-weight: bold;
             margin-bottom: 5px;
         }
-        .chart-placeholder {
-            background-color: #16181e;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-        .chart-label {
-            font-size: 14px;
+
+        .card-info p {
             color: var(--secondary-text);
-            margin-bottom: 8px;
+            font-size: 14px;
         }
-        .chart-viz {
-            height: 80px;
-            background: linear-gradient(90deg, #1c1f26 0%, #2c303b 50%, #1c1f26 100%);
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
-        }
-        .chart-viz::after {
-            content: '';
-            position: absolute;
-            bottom: 30%;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--accent-color);
-            box-shadow: 0 0 10px var(--accent-color);
-        }
+
         .carousel-container {
-            width: 100%;
-            max-width: 500px;
             display: flex;
             overflow-x: auto;
             gap: 15px;
-            padding: 10px 0;
-            scrollbar-width: none;
+            padding-bottom: 10px;
+            scroll-snap-type: x mandatory;
         }
+
         .carousel-container::-webkit-scrollbar {
             display: none;
         }
-        .carousel-item {
-            flex: 0 0 120px;
-            background-color: #1a1c22;
-            border-radius: 12px;
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            min-width: 150px;
+            scroll-snap-align: center;
             overflow: hidden;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            transition: border 0.3s;
         }
-        /* Bordes de neón para cada tarjeta */
-        .card-1 { border-color: #ff9900; box-shadow: 0 0 10px #ff9900; }
-        .card-2 { border-color: #00aaff; box-shadow: 0 0 10px #00aaff; }
-        .card-3 { border-color: #aa00ff; box-shadow: 0 0 10px #aa00ff; }
-        .card-4 { border-color: #00ff88; box-shadow: 0 0 10px #00ff88; }
-        .card-5 { border-color: #ff3344; box-shadow: 0 0 10px #ff3344; }
+        
+        .card:hover {
+            border: 1px solid var(--accent-color);
+        }
 
         .thumbnail-wrapper {
             position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
+            height: 100px;
+            background-color: #2D3142;
         }
+
         .thumbnail-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
+        .video-overlay img {
+            width: 40px;
+            height: 40px;
+        }
+
         .item-info {
             padding: 10px;
-            text-align: center;
         }
+
         .item-title {
             font-size: 14px;
             font-weight: bold;
@@ -161,66 +162,121 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .item-duration {
             color: var(--secondary-text);
             font-size: 11px;
         }
+
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Crypto Academy</h1>
-        <span class="live-badge">LIVE</span>
-    </header>
+    <div class="container">
+        <header>
+            <div class="logo">Crypto Academy</div>
+            <span class="live-badge">Live</span>
+        </header>
 
-    <div class="main-video-container">
-        <div class="video-wrapper">
-            <iframe id="main-player" src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen></iframe>
-        </div>
-        <div class="video-info">
-            <div id="main-title" class="video-title">Blockchain Fundamentals</div>
-            <div class="chart-placeholder">
-                <div class="chart-label">DeFi Principles</div>
-                <div class="chart-viz"></div>
+        <div class="video-card">
+            <div class="video-wrapper">
+                <iframe id="main-player" src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen></iframe>
+            </div>
+            <div class="card-info">
+                <h2 id="main-title">DeFi Principles</h2>
+                <p>Blockchain Fundamentals</p>
             </div>
         </div>
-    </div>
 
-    <div class="carousel-container">
-        <div class="carousel-item card-1" onclick="changeVideo('VIDEO_ID_1', 'Intro to Bitcoin')">
-            <div class="thumbnail-wrapper"><img src="https://img.youtube.com/vi/VIDEO_ID_1/mqdefault.jpg" alt="Thumbnail"></div>
-            <div class="item-info">
-                <div class="item-title">Intro to Bitcoin</div>
-                <div class="item-duration">10:24</div>
+        <h3>Featured Lessons</h3>
+        <br>
+        <div class="carousel-container">
+            <div class="card" onclick="changeVideo('VIDEO_ID_1', 'DeFi Principles')">
+                <div class="thumbnail-wrapper">
+                    <img src="https://img.youtube.com/vi/VIDEO_ID_1/hqdefault.jpg" alt="Thumbnail 1">
+                    <div class="video-overlay"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube"></div>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">1. Intro to Bitcoin</div>
+                    <div class="item-duration">10:24</div>
+                </div>
             </div>
-        </div>
-        <div class="carousel-item card-2" onclick="changeVideo('VIDEO_ID_2', 'Trading Pairs')">
-            <div class="thumbnail-wrapper"><img src="https://img.youtube.com/vi/VIDEO_ID_2/mqdefault.jpg" alt="Thumbnail"></div>
-            <div class="item-info">
-                <div class="item-title">Trading Pairs</div>
-                <div class="item-duration">14:15</div>
+
+            <div class="card" onclick="changeVideo('VIDEO_ID_2', 'Trading Pairs Analysis')">
+                <div class="thumbnail-wrapper">
+                    <img src="https://img.youtube.com/vi/VIDEO_ID_2/hqdefault.jpg" alt="Thumbnail 2">
+                    <div class="video-overlay"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube"></div>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">2. Trading Pairs</div>
+                    <div class="item-duration">14:15</div>
+                </div>
             </div>
-        </div>
-        <div class="carousel-item card-3" onclick="changeVideo('VIDEO_ID_3', 'Altcoin Analysis')">
-            <div class="thumbnail-wrapper"><img src="https://img.youtube.com/vi/VIDEO_ID_3/mqdefault.jpg" alt="Thumbnail"></div>
-            <div class="item-info">
-                <div class="item-title">Altcoin Analysis</div>
-                <div class="item-duration">11:50</div>
+
+            <div class="card" onclick="changeVideo('VIDEO_ID_3', 'Altcoin Analysis Strategies')">
+                <div class="thumbnail-wrapper">
+                    <img src="https://img.youtube.com/vi/VIDEO_ID_3/hqdefault.jpg" alt="Thumbnail 3">
+                    <div class="video-overlay"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube"></div>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">3. Altcoin Analysis</div>
+                    <div class="item-duration">11:50</div>
+                </div>
             </div>
-        </div>
-        <div class="carousel-item card-4" onclick="changeVideo('VIDEO_ID_4', 'Advanced TA')">
-            <div class="thumbnail-wrapper"><img src="https://img.youtube.com/vi/VIDEO_ID_4/mqdefault.jpg" alt="Thumbnail"></div>
-            <div class="item-info">
-                <div class="item-title">Advanced TA</div>
-                <div class="item-duration">16:30</div>
+
+            <div class="card" onclick="changeVideo('VIDEO_ID_4', 'Advanced Technical Analysis')">
+                <div class="thumbnail-wrapper">
+                    <img src="https://img.youtube.com/vi/VIDEO_ID_4/hqdefault.jpg" alt="Thumbnail 4">
+                    <div class="video-overlay"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube"></div>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">4. Advanced TA</div>
+                    <div class="item-duration">16:30</div>
+                </div>
             </div>
-        </div>
-        <div class="carousel-item card-5" onclick="changeVideo('VIDEO_ID_5', 'Futures Basics')">
-            <div class="thumbnail-wrapper"><img src="https://img.youtube.com/vi/VIDEO_ID_5/mqdefault.jpg" alt="Thumbnail"></div>
-            <div class="item-info">
-                <div class="item-title">Futures Basics</div>
-                <div class="item-duration">12:10</div>
+
+            <div class="card" onclick="changeVideo('VIDEO_ID_5', 'Futures Basics')">
+                <div class="thumbnail-wrapper">
+                    <img src="https://img.youtube.com/vi/VIDEO_ID_5/hqdefault.jpg" alt="Thumbnail 5">
+                    <div class="video-overlay"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube"></div>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">5. Futures Basics</div>
+                    <div class="item-duration">12:10</div>
+                </div>
+            </div>
+            
+            <div class="card" onclick="changeVideo('VIDEO_ID_6', 'Risk Management')">
+                <div class="thumbnail-wrapper">
+                    <img src="https://img.youtube.com/vi/VIDEO_ID_6/hqdefault.jpg" alt="Thumbnail 6">
+                    <div class="video-overlay"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube"></div>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">6. Risk Management</div>
+                    <div class="item-duration">15:00</div>
+                </div>
+            </div>
+
+            <div class="card" onclick="changeVideo('VIDEO_ID_7', 'Understanding Candlesticks')">
+                <div class="thumbnail-wrapper">
+                    <img src="https://img.youtube.com/vi/VIDEO_ID_7/hqdefault.jpg" alt="Thumbnail 7">
+                    <div class="video-overlay"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube"></div>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">7. Candlesticks</div>
+                    <div class="item-duration">18:45</div>
+                </div>
+            </div>
+
+            <div class="card" onclick="changeVideo('VIDEO_ID_8', 'Understanding Wallets')">
+                <div class="thumbnail-wrapper">
+                    <img src="https://img.youtube.com/vi/VIDEO_ID_8/hqdefault.jpg" alt="Thumbnail 8">
+                    <div class="video-overlay"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube"></div>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">8. Web3 Wallets</div>
+                    <div class="item-duration">13:20</div>
+                </div>
             </div>
         </div>
     </div>
@@ -230,11 +286,10 @@
         window.Telegram.WebApp.expand();
 
         function changeVideo(videoId, title) {
-            document.getElementById('main-player').src = `https://www.youtube.com/embed/${videoId}`;
+            document.getElementById('main-player').src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
             document.getElementById('main-title').innerText = title;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
 </html>
-
