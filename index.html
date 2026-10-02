@@ -1,440 +1,525 @@
-
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criptoacademia Mini App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Criptoacademia - Telegram Mini App</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#0b0e14',
-                        cardBg: '#131823',
-                        cardHover: '#1a2233',
-                        neonCyan: '#00f2fe',
-                        neonBlue: '#4facfe',
-                        neonPurple: '#a855f7',
-                        neonGold: '#f59e0b',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        tg: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                            cardHover: '#334155',
+                            accent: '#3b82f6',
+                            cyan: '#06b6d4',
+                            border: '#334155'
+                        }
                     }
                 }
             }
         }
     </script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background-color: #0b0e14;
-            color: #f3f4f6;
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            background-color: #0b0f19;
+            color: #f8fafc;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        /* Custom scrollbar for carousels */
-        .no-scrollbar::-webkit-scrollbar {
+        .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
-        .no-scrollbar {
+        .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-
-        /* Neon glow effects matching the requested design */
-        .neon-border-active {
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6), inset 0 0 10px rgba(0, 242, 254, 0.3);
-            border-color: #00f2fe !important;
-        }
-
-        .neon-border-gold {
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
-            border-color: #f59e0b !important;
-        }
-
-        .neon-border-purple {
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
-            border-color: #a855f7 !important;
-        }
-
-        @keyframes pulse-live {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.95); }
-        }
-
-        .animate-pulse-live {
-            animation: pulse-live 2s infinite ease-in-out;
-        }
-
         @keyframes ticker {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
-
-        .ticker-track {
+        .animate-ticker {
             display: flex;
             width: max-content;
-            animation: ticker 25s linear infinite;
+            animation: ticker 30s linear infinite;
         }
-        
-        .ticker-track:hover {
+        .animate-ticker:hover {
             animation-play-state: paused;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
         }
     </style>
 </head>
-<body class="bg-darkBg min-h-screen flex justify-center items-center p-0 md:p-4">
+<body class="min-h-screen flex justify-center bg-[#07090e]">
 
-    <div class="w-full max-w-md bg-darkBg min-h-screen md:min-h-[850px] md:rounded-3xl md:border md:border-gray-800 shadow-2xl flex flex-col relative overflow-hidden">
+    <div class="w-full max-w-md bg-[#0b0f19] min-h-screen flex flex-col shadow-2xl relative overflow-hidden border-x border-slate-800">
         
-        <!-- Top Telegram Header -->
-        <header class="flex items-center justify-between px-4 py-3 bg-[#131823]/80 backdrop-blur-md border-b border-gray-800/60 sticky top-0 z-50">
+        <!-- HEADER -->
+        <header class="sticky top-0 z-40 bg-[#0f172a]/90 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-slate-800">
             <div class="flex items-center space-x-3">
-                <button class="w-9 h-9 rounded-full bg-gray-800/80 flex items-center justify-center text-gray-300 hover:text-white transition">
-                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                <button onclick="showToast('Volver al chat de Telegram')" class="w-9 h-9 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-300 hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-arrow-left"></i>
                 </button>
                 <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-                        <i class="fa-solid fa-chart-line text-white text-xs"></i>
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-md">
+                        <i class="fa-solid fa-chart-line text-sm"></i>
                     </div>
-                    <span class="font-bold text-base tracking-wide bg-gradient-to-r from-white via-gray-100 to-gray-400 bg-clip-text text-transparent">Criptoacademia</span>
+                    <span class="font-bold text-base tracking-wide text-white">Criptoacademia</span>
                 </div>
             </div>
-
             <div class="flex items-center space-x-2">
-                <!-- LIVE Badge -->
-                <div class="flex items-center space-x-1.5 bg-red-950/80 border border-red-600/50 px-2.5 py-1 rounded-full animate-pulse-live shadow-lg shadow-red-900/30">
-                    <span class="w-2 h-2 rounded-full bg-red-500 animate-ping absolute"></span>
-                    <span class="w-2 h-2 rounded-full bg-red-500 relative"></span>
-                    <span class="text-xs font-bold text-red-400 tracking-wider">LIVE</span>
+                <div class="flex items-center space-x-1.5 bg-red-500/15 border border-red-500/30 px-2.5 py-1 rounded-full">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <span class="text-[11px] font-bold text-red-400 tracking-wider">LIVE</span>
                 </div>
-                <!-- Menu Button -->
-                <button class="w-9 h-9 rounded-full bg-gray-800/80 flex items-center justify-center text-gray-300 hover:text-white transition">
-                    <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+                <button onclick="toggleMenu()" class="w-9 h-9 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-300 hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
                 </button>
             </div>
         </header>
 
-        <main class="flex-1 flex flex-col pb-6 overflow-y-auto no-scrollbar">
-            
-            <!-- Video Player Container -->
-            <div class="relative w-full aspect-video bg-black shadow-inner">
-                <div id="video-container" class="w-full h-full">
-                    <!-- YouTube Iframe will be injected here dynamically -->
-                    <iframe id="main-video-iframe" class="w-full h-full border-0" src="" title="Criptoacademia Video Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                
-                <!-- Academy Floating Watermark Logo -->
-                <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md border border-cyan-500/30 px-2.5 py-1 rounded-xl flex items-center space-x-1.5 shadow-md">
-                    <div class="w-5 h-5 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-[10px] text-white">
-                        <i class="fa-solid fa-bolt"></i>
+        <!-- MAIN SCROLLABLE CONTENT -->
+        <main class="flex-1 overflow-y-auto pb-24 space-y-5">
+
+            <!-- CENTRAL VIDEO PLAYER SECTION -->
+            <section class="px-4 pt-4">
+                <div class="relative w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-xl group">
+                    <div id="videoContainer" class="relative w-full aspect-video bg-slate-950 flex items-center justify-center overflow-hidden">
+                        <iframe id="activeVideoIframe" class="w-full h-full object-cover" src="" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        
+                        <div id="videoPlaceholder" class="absolute inset-0 bg-cover bg-center flex flex-col items-center justify-center p-4 text-center">
+                            <div class="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
+                            <div class="relative z-10">
+                                <button onclick="playVideo()" class="w-16 h-16 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transform hover:scale-105 transition mx-auto mb-3">
+                                    <i class="fa-solid fa-play text-xl ml-1"></i>
+                                </button>
+                                <span id="currentVideoBadge" class="inline-block px-2.5 py-0.5 rounded-md bg-blue-500/20 text-cyan-400 text-xs font-semibold mb-1 border border-cyan-500/30">Fundamentos</span>
+                                <h3 id="currentVideoTitleOverlay" class="text-white font-bold text-base line-clamp-1 px-2">1. Intro to Bitcoin</h3>
+                                <span class="text-xs text-slate-300 mt-1 block">freeCodeCamp.org</span>
+                            </div>
+                        </div>
                     </div>
-                    <span class="text-[11px] font-semibold text-cyan-300 tracking-tight">Criptoacademia</span>
                 </div>
-            </div>
 
-            <!-- Video Title & Description Header -->
-            <div class="px-4 pt-4 pb-2">
-                <div class="flex items-center justify-between">
-                    <h1 id="current-video-title" class="text-lg font-bold text-white tracking-wide">1. Intro to Bitcoin</h1>
-                    <span id="current-video-category" class="text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Fundamentos</span>
+                <!-- Video Meta & Progress Bar -->
+                <div class="mt-3 px-1">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <h2 id="currentVideoTitle" class="font-bold text-white text-base">1. Intro to Bitcoin</h2>
+                        <span id="currentVideoCategory" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">Fundamentos</span>
+                    </div>
+                    <p id="currentVideoDesc" class="text-xs text-slate-400 leading-relaxed mb-3">Aprende los conceptos clave detrás de la red Bitcoin y la tecnología blockchain.</p>
+                    
+                    <div class="space-y-1">
+                        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                            <div id="videoProgress" class="bg-gradient-to-r from-blue-500 to-cyan-400 h-full w-[35%] rounded-full transition-all duration-300"></div>
+                        </div>
+                        <div class="flex justify-between text-[11px] text-slate-400 font-medium">
+                            <span id="videoCurrentTime">05:42</span>
+                            <span id="videoDuration">10:24</span>
+                        </div>
+                    </div>
                 </div>
-                <p id="current-video-subtitle" class="text-xs text-gray-400 mt-1">Aprende los conceptos clave detrás de la red Bitcoin y la tecnología blockchain.</p>
-            </div>
+            </section>
 
-            <!-- Custom Telegram Video Progress Bar -->
-            <div class="px-4 py-2">
-                <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden relative cursor-pointer" id="progress-bar-container">
-                    <div id="progress-bar-fill" class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full w-[31%] rounded-full relative"></div>
-                </div>
-                <div class="flex justify-between items-center text-[11px] text-gray-400 mt-1.5 font-mono">
-                    <span id="current-time">05:42</span>
-                    <span id="total-time">/ 10:24</span>
-                </div>
-            </div>
-
-            <div class="mt-4 px-4">
-                <div class="flex items-center justify-between mb-2.5">
+            <!-- MOVING CRYPTO TICKER -->
+            <section class="space-y-2">
+                <div class="px-4 flex items-center justify-between">
                     <div class="flex items-center space-x-2">
-                        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-gray-300">Criptomonedas en Vivo</h2>
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></div>
+                        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">CRIPTOMONEDAS EN VIVO</h3>
                     </div>
-                    <span class="text-[10px] text-gray-400 bg-gray-800/80 px-2 py-0.5 rounded">Actualización real</span>
-                </div>
-                
-                <!-- Ticker Carousel Container -->
-                <div class="relative w-full overflow-hidden py-1">
-                    <div class="ticker-track space-x-3" id="crypto-ticker">
-                        <!-- Items will be populated via JavaScript -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-6 px-4">
-                <div class="flex items-center justify-between mb-3">
-                    <h2 class="text-sm font-bold tracking-wide text-white uppercase flex items-center space-x-2">
-                        <span>Videoclases más</span>
-                        <span class="text-xs font-normal text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded-full border border-cyan-800/40">8 Clases</span>
-                    </h2>
-                    <span class="text-xs text-gray-400 hover:text-cyan-400 cursor-pointer transition">Ver todas</span>
+                    <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-medium border border-slate-700">Actualización real</span>
                 </div>
 
-                <!-- Horizontal Carousel for 8 YouTube Videos -->
-                <div class="flex space-x-3 overflow-x-auto no-scrollbar pb-3 pt-1" id="videos-carousel">
-                    <!-- Cards injected dynamically via JS -->
+                <div class="relative overflow-hidden w-full py-1 bg-slate-900/60 border-y border-slate-800/80">
+                    <div class="animate-ticker space-x-3 px-2" id="cryptoTickerContainer"></div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Extra Info Banner -->
-            <div class="mx-4 mt-6 p-4 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-purple-950/30 to-blue-950/40 border border-indigo-500/20 flex items-center justify-between shadow-lg">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-cyan-500/20">
-                        <i class="fa-solid fa-graduation-cap text-lg"></i>
+            <!-- VIDEOCLASES CAROUSEL (21+ Items) -->
+            <section class="space-y-3">
+                <div class="px-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <h3 class="font-bold text-white text-base">VIDEOCLASES MÁS</h3>
+                        <span id="totalClassesBadge" class="text-xs bg-cyan-500/20 text-cyan-400 px-2.5 py-0.5 rounded-full border border-cyan-500/30 font-bold">21 CLASES</span>
                     </div>
+                    <button onclick="showAllVideos()" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition">Ver todas</button>
+                </div>
+
+                <div class="flex space-x-3 overflow-x-auto hide-scrollbar px-4 pb-2" id="videoCarouselContainer"></div>
+            </section>
+
+            <!-- KEY CONCEPTS CAROUSEL (47 Colored Icon Items) -->
+            <section class="space-y-3">
+                <div class="px-4 flex items-center justify-between">
                     <div>
-                        <h4 class="text-xs font-bold text-white">Comunidad VIP Criptoacademia</h4>
-                        <p class="text-[11px] text-gray-400">Accede a señales exclusivas y mentorías en vivo.</p>
+                        <h3 class="font-bold text-white text-base">47 Conceptos Clave</h3>
+                        <p class="text-xs text-slate-400">Glosario deslizable con íconos coloridos</p>
+                    </div>
+                    <span class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-500/30 font-bold">47 Items</span>
+                </div>
+
+                <div class="px-4">
+                    <div class="relative">
+                        <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="conceptSearch" oninput="filterConcepts(this.value)" placeholder="Buscar concepto clave (ej. Bitcoin, DeFi)..." class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
                     </div>
                 </div>
-                <button class="px-3 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-cyan-500/30 hover:opacity-95 transition">
-                    Unirme
-                </button>
-            </div>
+
+                <div class="flex space-x-3 overflow-x-auto hide-scrollbar px-4 pb-2" id="conceptsCarouselContainer"></div>
+            </section>
+
+            <!-- VIP COMMUNITY BANNER -->
+            <section class="px-4">
+                <div class="glass-panel rounded-2xl p-4 relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/60 border border-blue-500/20 shadow-lg">
+                    <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl"></div>
+                    <div class="flex items-center space-x-3.5 relative z-10">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white text-xl shadow-lg shadow-cyan-500/20 shrink-0">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-white text-sm">Comunidad VIP Criptoacademia</h4>
+                            <p class="text-xs text-slate-300 mt-0.5">Accede a señales exclusivas y mentorías en vivo.</p>
+                        </div>
+                    </div>
+                    <button onclick="joinVIP()" class="mt-3.5 w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold py-2.5 px-4 rounded-xl text-sm shadow-lg shadow-cyan-500/20 transition flex items-center justify-center space-x-2">
+                        <span>Unirme</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </section>
 
         </main>
 
-        <!-- Telegram Mini App Bottom Navigation Bar -->
-        <nav class="bg-[#131823]/90 backdrop-blur-md border-t border-gray-800/80 px-6 py-2.5 flex items-center justify-between sticky bottom-0 z-50">
-            <button class="flex flex-col items-center text-cyan-400 space-y-1">
-                <i class="fa-solid fa-play text-base"></i>
-                <span class="text-[10px] font-medium">Clases</span>
-            </button>
-            <button class="flex flex-col items-center text-gray-400 hover:text-cyan-400 transition space-y-1">
-                <i class="fa-solid fa-chart-candlestick text-base"></i>
-                <span class="text-[10px] font-medium">Mercados</span>
-            </button>
-            <button class="flex flex-col items-center text-gray-400 hover:text-cyan-400 transition space-y-1">
-                <i class="fa-solid fa-robot text-base"></i>
-                <span class="text-[10px] font-medium">IA Bot</span>
-            </button>
-            <button class="flex flex-col items-center text-gray-400 hover:text-cyan-400 transition space-y-1">
-                <i class="fa-solid fa-user-shield text-base"></i>
-                <span class="text-[10px] font-medium">Perfil</span>
-            </button>
-        </nav>
+        <!-- CONCEPT DETAIL MODAL -->
+        <div id="conceptModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity duration-300">
+            <div class="bg-[#121824] w-full max-w-lg rounded-t-3xl sm:rounded-2xl border border-slate-800 shadow-2xl max-h-[85vh] flex flex-col overflow-hidden transform transition-transform duration-300 translate-y-full sm:translate-y-0" id="modalContent">
+                <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-[#0f172a]">
+                    <div class="flex items-center space-x-3">
+                        <div id="modalIconBg" class="w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-md">
+                            <i id="modalIcon" class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-cyan-400 tracking-wider">Concepto Clave</span>
+                            <h3 id="modalTitle" class="text-white font-bold text-base">Bitcoin (BTC)</h3>
+                        </div>
+                    </div>
+                    <button onclick="closeModal()" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                <div class="p-5 overflow-y-auto space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <div id="modalDescription" class="font-medium text-white bg-slate-900/60 p-3 rounded-xl border border-slate-800"></div>
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-cyan-400 text-xs uppercase tracking-wider"><i class="fa-solid fa-book-open mr-1.5"></i> Explicación Completa</h4>
+                        <p id="modalFullText" class="text-slate-300 text-sm leading-relaxed"></p>
+                    </div>
+                    <div class="bg-blue-950/30 border border-blue-500/20 p-3.5 rounded-xl flex items-start space-x-3">
+                        <i class="fa-solid fa-lightbulb text-cyan-400 mt-0.5"></i>
+                        <div>
+                            <span class="font-semibold text-xs text-white block mb-0.5">Dato Clave para Traders</span>
+                            <p id="modalTip" class="text-xs text-slate-400">Comprender este concepto ayuda a mejorar la gestión de riesgo en tus inversiones.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-slate-800 bg-[#0f172a] flex justify-end">
+                    <button onclick="closeModal()" class="w-full sm:w-auto px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl text-xs transition">Entendido</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOAST NOTIFICATION -->
+        <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 border border-slate-700 text-white text-xs px-4 py-2.5 rounded-xl shadow-2xl backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 flex items-center space-x-2">
+            <i class="fa-solid fa-circle-check text-cyan-400"></i>
+            <span id="toastMessage">Acción realizada correctamente</span>
+        </div>
 
     </div>
 
     <script>
-        // 8 YouTube Videos Dataset matching the requested theme
-        const videosData = [
-            {
-                id: 1,
-                title: "1. Intro to Bitcoin",
-                duration: "10:24",
-                youtubeId: "PkZNo7MFNFg", // Sample educational crypto video ID
-                category: "Fundamentos",
-                subtitle: "Aprende los conceptos clave detrás de la red Bitcoin y la tecnología blockchain.",
-                glowClass: "neon-border-active",
-                icon: "fa-bitcoin text-amber-400"
-            },
-            {
-                id: 2,
-                title: "2. Trading Pairs",
-                duration: "14:15",
-                youtubeId: "g6i_hzW7pW8",
-                category: "Trading",
-                subtitle: "Dominando la correlación de pares de criptomonedas y liquidez en exchanges.",
-                glowClass: "neon-border-gold",
-                icon: "fa-right-left text-cyan-400"
-            },
-            {
-                id: 3,
-                title: "3. Altcoin Analysis",
-                duration: "11:50",
-                youtubeId: "2X2Ww8cQm30",
-                category: "Altcoins",
-                subtitle: "Estrategias avanzadas para identificar gemas y evaluar proyectos DeFi.",
-                glowClass: "neon-border-active",
-                icon: "fa-coins text-purple-400"
-            },
-            {
-                id: 4,
-                title: "4. Advanced TA",
-                duration: "16:30",
-                youtubeId: "Q7M4vhz2i3s",
-                category: "Análisis Téc.",
-                subtitle: "Indicadores complejos, volumen, order blocks y gestión de riesgo institucional.",
-                glowClass: "neon-border-purple",
-                icon: "fa-chart-line text-emerald-400"
-            },
-            {
-                id: 5,
-                title: "5. Futures Basics",
-                duration: "12:10",
-                youtubeId: "1pM1j2_Z9l4",
-                category: "Derivados",
-                subtitle: "Apalancamiento, posiciones long/short y liquidaciones explicadas paso a paso.",
-                glowClass: "neon-border-active",
-                icon: "fa-rocket text-amber-400"
-            },
-            {
-                id: 6,
-                title: "6. DeFi & Yields",
-                duration: "15:40",
-                youtubeId: "dQw4w9WgXcQ",
-                category: "DeFi",
-                subtitle: "Staking, farming de rendimiento y cómo maximizar ingresos pasivos seguros.",
-                glowClass: "neon-border-gold",
-                icon: "fa-water text-cyan-400"
-            },
-            {
-                id: 7,
-                title: "7. Security & Wallets",
-                duration: "09:55",
-                youtubeId: "5qap5aO4i9A",
-                category: "Seguridad",
-                subtitle: "Protege tus activos con carteras frías, frases semilla y buenas prácticas.",
-                glowClass: "neon-border-purple",
-                icon: "fa-shield-halved text-indigo-400"
-            },
-            {
-                id: 8,
-                title: "8. Crypto Psychology",
-                duration: "13:20",
-                youtubeId: "3JZ_D3ELwOQ",
-                category: "Psicología",
-                subtitle: "Controlando el FOMO, el pánico y manteniendo la disciplina en mercados alcistas.",
-                glowClass: "neon-border-active",
-                icon: "fa-brain text-pink-400"
-            }
+        // 1. VIDEOCLASES (21 items configurables)
+        const videoclases = [
+            { id: 1, title: "1. Intro to Bitcoin", category: "Fundamentos", duration: "10:24", currentTime: "05:42", progressPercent: 55, description: "Aprende los conceptos clave detrás de la red Bitcoin y la tecnología blockchain.", youtubeId: "rfscVS0vtbw", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=1.+Intro+Bitcoin" },
+            { id: 2, title: "2. Trading Pairs", category: "Análisis Técnico", duration: "14:15", currentTime: "00:00", progressPercent: 0, description: "Cómo funcionan los pares de divisas cripto y los mercados Spot vs Futuros.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=2.+Trading+Pairs" },
+            { id: 3, title: "3. Altcoin Analysis", category: "Estrategia", duration: "11:50", currentTime: "00:00", progressPercent: 0, description: "Identifica gemas y proyectos con alta utilidad real en el ecosistema DeFi.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=3.+Altcoin+Analysis" },
+            { id: 4, title: "4. Advanced TA", category: "Análisis", duration: "18:30", currentTime: "00:00", progressPercent: 0, description: "Dominando el RSI, MACD y Medias Móviles Exponenciales (EMA).", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=4.+Advanced+TA" },
+            { id: 5, title: "5. DeFi Yield Farming", category: "Finanzas", duration: "12:10", currentTime: "00:00", progressPercent: 0, description: "Generación de ingresos pasivos mediante protocolos descentralizados.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=5.+DeFi+Yield" },
+            { id: 6, title: "6. Smart Contracts", category: "Tecnología", duration: "15:00", currentTime: "00:00", progressPercent: 0, description: "Introducción a Solidity y la ejecución automática en Ethereum.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=6.+Smart+Contracts" },
+            { id: 7, title: "7. Risk Management", category: "Psicotrading", duration: "20:45", currentTime: "00:00", progressPercent: 0, description: "Regla del 1%, apalancamiento seguro y stop-loss profesional.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=7.+Risk+Management" },
+            { id: 8, title: "8. NFT & Web3 Economics", category: "Tendencias", duration: "13:20", currentTime: "00:00", progressPercent: 0, description: "Propiedad digital, coleccionables y tokenomics avanzados.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=8.+NFT+Economics" },
+            { id: 9, title: "9. Stablecoins & Pegging", category: "Fundamentos", duration: "09:15", currentTime: "00:00", progressPercent: 0, description: "USDT, USDC y los riesgos sistémicos de las monedas estables.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=9.+Stablecoins" },
+            { id: 10, title: "10. Crypto Tax & Regulation", category: "Legal", duration: "16:40", currentTime: "00:00", progressPercent: 0, description: "Cómo declarar ganancias y cumplir con normativas fiscales internacionales.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=10.+Crypto+Tax" },
+            { id: 11, title: "11. Layer 2 Scaling", category: "Tecnología", duration: "14:50", currentTime: "00:00", progressPercent: 0, description: "Arbitrum, Optimism y ZK-Rollups explicados desde cero.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=11.+Layer+2" },
+            { id: 12, title: "12. Order Book & Liquidity", category: "Trading", duration: "11:30", currentTime: "00:00", progressPercent: 0, description: "Leyendo el libro de órdenes y detectando ballenas en el mercado.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=12.+Order+Book" },
+            { id: 13, title: "13. Bitcoin Halving Cycles", category: "Macro", duration: "15:10", currentTime: "00:00", progressPercent: 0, description: "Impacto histórico de los halvings en la cotización de BTC.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=13.+Halving" },
+            { id: 14, title: "14. Web3 Security & Wallets", category: "Seguridad", duration: "12:00", currentTime: "00:00", progressPercent: 0, description: "Hardware wallets, frases semilla y cómo evitar estafas de phishing.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=14.+Security" },
+            { id: 15, title: "15. Crypto Psychology", category: "Psicotrading", duration: "16:25", currentTime: "00:00", progressPercent: 0, description: "Controlando el FOMO y el FUD en mercados altamente volátiles.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=15.+Psychology" },
+            { id: 16, title: "16. Futures & Leverage", category: "Trading", duration: "21:00", currentTime: "00:00", progressPercent: 0, description: "Gestión de posiciones apalancadas y liquidaciones de margen.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=16.+Futures" },
+            { id: 17, title: "17. Macroeconomics in Crypto", category: "Macro", duration: "19:15", currentTime: "00:00", progressPercent: 0, description: "Tasas de interés de la FED, inflación y su correlación con Bitcoin.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=17.+Macro" },
+            { id: 18, title: "18. On-Chain Metrics", category: "Análisis", duration: "14:20", currentTime: "00:00", progressPercent: 0, description: "Analizando flujos de exchange, MVRV y reservas de mineros.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=18.+On-Chain" },
+            { id: 19, title: "19. AI & Blockchain", category: "Tendencias", duration: "13:50", currentTime: "00:00", progressPercent: 0, description: "La convergencia entre Inteligencia Artificial y redes descentralizadas.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=19.+AI+Crypto" },
+            { id: 20, title: "20. DAO Governance", category: "Ecosistema", duration: "10:45", currentTime: "00:00", progressPercent: 0, description: "Cómo participar en organizaciones autónomas descentralizadas y votaciones.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=20.+DAOs" },
+            { id: 21, title: "21. Portfolio Building", category: "Estrategia", duration: "17:10", currentTime: "00:00", progressPercent: 0, description: "Diseñando un portafolio de criptoactivos equilibrado para largo plazo.", youtubeId: "dQw4w9WgXcQ", thumbnail: "https://placehold.co/400x225/1e293b/38bdf8?text=21.+Portfolio" }
         ];
 
-        // Initial Crypto Prices Dataset
-        let cryptos = [
-            { name: "Bitcoin", symbol: "BTC", price: 68450.12, change: 1.5, icon: "fa-brands fa-bitcoin", color: "text-amber-500" },
-            { name: "Ethereum", symbol: "ETH", price: 3512.90, change: -0.8, icon: "fa-brands fa-ethereum", color: "text-blue-400" },
-            { name: "Solana", symbol: "SOL", price: 175.66, change: 2.1, icon: "fa-solid fa-bolt", color: "text-purple-400" },
-            { name: "XRP", symbol: "XRP", price: 0.512, change: -0.3, icon: "fa-solid fa-x", color: "text-gray-200" },
-            { name: "Cardano", symbol: "ADA", price: 0.450, change: 1.1, icon: "fa-solid fa-certificate", color: "text-blue-500" },
-            { name: "Binance Coin", symbol: "BNB", price: 605.40, change: 1.7, icon: "fa-solid fa-coins", color: "text-amber-400" }
+        // 2. 10 CRIPTOMONEDAS PRINCIPALES (Ticker en vivo)
+        const criptomonedas = [
+            { symbol: "BTC", name: "Bitcoin", price: "$64,250.00", change: "+2.4%", positive: true, icon: "fa-brands fa-bitcoin text-amber-400" },
+            { symbol: "ETH", name: "Ethereum", price: "$3,512.90", change: "-0.8%", positive: false, icon: "fa-brands fa-ethereum text-indigo-400" },
+            { symbol: "SOL", name: "Solana", price: "$175.66", change: "+2.1%", positive: true, icon: "fa-solid fa-bolt text-cyan-400" },
+            { symbol: "XRP", name: "XRP", price: "$0.5120", change: "-0.3%", positive: false, icon: "fa-solid fa-xmark text-slate-300" },
+            { symbol: "ADA", name: "Cardano", price: "$0.4520", change: "+1.2%", positive: true, icon: "fa-solid fa-circle-nodes text-blue-400" },
+            { symbol: "DOGE", name: "Dogecoin", price: "$0.1245", change: "+5.6%", positive: true, icon: "fa-solid fa-dog text-yellow-500" },
+            { symbol: "AVAX", name: "Avalanche", price: "$28.40", change: "-1.5%", positive: false, icon: "fa-solid fa-mountain text-red-500" },
+            { symbol: "DOT", name: "Polkadot", price: "$6.85", change: "+0.4%", positive: true, icon: "fa-solid fa-circle-dot text-pink-400" },
+            { symbol: "LINK", name: "Chainlink", price: "$18.20", change: "+3.8%", positive: true, icon: "fa-solid fa-link text-blue-500" },
+            { symbol: "MATIC", name: "Polygon", price: "$0.6210", change: "-0.9%", positive: false, icon: "fa-solid fa-shapes text-purple-400" }
         ];
 
-        let activeVideoIndex = 0;
+        // 3. 47 CONCEPTOS CLAVE CON ICONOS VIBRANTES A COLOR
+        const conceptosClave = [
+            { id: 1, title: "Bitcoin (BTC)", summary: "La primera criptomoneda descentralizada del mundo.", icon: "fa-brands fa-bitcoin", bgGradient: "from-amber-500/25 to-yellow-600/20", iconColor: "text-amber-400", borderCol: "border-amber-500/30", fullText: "Bitcoin es una moneda digital descentralizada creada en 2009 por Satoshi Nakamoto. Permite transacciones P2P sin intermediarios bancarios utilizando criptografía y un libro contable público.", tip: "BTC es considerado el 'oro digital' y el activo refugio principal." },
+            { id: 2, title: "Blockchain", summary: "Tecnología de registro distribuido inmutable.", icon: "fa-solid fa-cubes", bgGradient: "from-cyan-500/25 to-blue-600/20", iconColor: "text-cyan-400", borderCol: "border-cyan-500/30", fullText: "Una cadena de bloques es una base de datos descentralizada compartida entre los nodos de una red, haciendo que la información sea imposible de alterar.", tip: "Garantiza seguridad y confianza sin depender de autoridades centrales." },
+            { id: 3, title: "Smart Contracts", summary: "Contratos auto-ejecutables escritos en código.", icon: "fa-solid fa-file-code", bgGradient: "from-emerald-500/25 to-teal-600/20", iconColor: "text-emerald-400", borderCol: "border-emerald-500/30", fullText: "Programas informáticos que se ejecutan automáticamente cuando se cumplen condiciones predeterminadas en la blockchain.", tip: "Base fundamental de las aplicaciones descentralizadas (dApps) y DeFi." },
+            { id: 4, title: "DeFi", summary: "Finanzas Descentralizadas basadas en protocolos abiertos.", icon: "fa-solid fa-landmark", bgGradient: "from-blue-500/25 to-indigo-600/20", iconColor: "text-blue-400", borderCol: "border-blue-500/30", fullText: "Servicios financieros tradicionales operados mediante contratos inteligentes en blockchains públicas sin permisos previos.", tip: "Ofrece altos rendimientos pero conlleva riesgos técnicos y de contratos." },
+            { id: 5, title: "Altcoins", summary: "Cualquier criptomoneda alternativa diferente a Bitcoin.", icon: "fa-solid fa-coins", bgGradient: "from-purple-500/25 to-fuchsia-600/20", iconColor: "text-purple-400", borderCol: "border-purple-500/30", fullText: "Incluye a miles de proyectos con propósitos diversos, desde plataformas de contratos inteligentes hasta monedas meme.", tip: "Suelen tener mayor volatilidad y potencial durante mercados alcistas." },
+            { id: 6, title: "Stablecoins", summary: "Criptomonedas cuyo valor está vinculado al dólar.", icon: "fa-solid fa-dollar-sign", bgGradient: "from-green-500/25 to-emerald-600/20", iconColor: "text-green-400", borderCol: "border-green-500/30", fullText: "Monedas estables (USDT, USDC) que mantienen paridad cercana a 1:1 con el USD, permitiendo resguardar ganancias sin salir a fiat.", tip: "Esenciales para mitigar la volatilidad extrema dentro de los exchanges." },
+            { id: 7, title: "Halving", summary: "Evento cuatrienal que reduce emisión de BTC.", icon: "fa-solid fa-scissors", bgGradient: "from-rose-500/25 to-red-600/20", iconColor: "text-rose-400", borderCol: "border-rose-500/30", fullText: "Programado cada 210,000 bloques, reduce a la mitad la recompensa por bloque para mineros, creando escasez y control inflacionario.", tip: "Históricamente precede a los ciclos alcistas más importantes." },
+            { id: 8, title: "Wallet", summary: "Herramienta digital para claves privadas y criptoactivos.", icon: "fa-solid fa-wallet", bgGradient: "from-indigo-500/25 to-blue-600/20", iconColor: "text-indigo-400", borderCol: "border-indigo-500/30", fullText: "Almacena las claves criptográficas necesarias para firmar transacciones en la red blockchain de forma completamente segura.", tip: "Recuerda: 'Not your keys, not your coins'." },
+            { id: 9, title: "Análisis Técnico", summary: "Estudio de gráficos de precios y volumen.", icon: "fa-solid fa-chart-line", bgGradient: "from-cyan-500/25 to-teal-600/20", iconColor: "text-cyan-300", borderCol: "border-cyan-500/30", fullText: "Utilización de patrones de velas, soportes, resistencias e indicadores para identificar puntos óptimos de entrada y salida.", tip: "Refleja la psicología de masa en el movimiento del precio." },
+            { id: 10, title: "Liquidez", summary: "Facilidad de convertir un criptoactivo en efectivo.", icon: "fa-solid fa-droplet", bgGradient: "from-blue-500/25 to-cyan-600/20", iconColor: "text-blue-300", borderCol: "border-blue-500/30", fullText: "Alta liquidez significa operar grandes cantidades sin alterar drásticamente el precio del activo en el mercado.", tip: "Opera preferentemente en pares con alta liquidez." },
+            { id: 11, title: "Apalancamiento", summary: "Uso de capital prestado para abrir posiciones.", icon: "fa-solid fa-scale-balanced", bgGradient: "from-orange-500/25 to-amber-600/20", iconColor: "text-orange-400", borderCol: "border-orange-500/30", fullText: "Permite multiplicar ganancias y pérdidas potenciales. Un apalancamiento excesivo puede liquidar tu cuenta rápidamente.", tip: "Los traders profesionales rara vez usan más de 3x o 5x." },
+            { id: 12, title: "FOMO", summary: "Miedo a quedarse fuera de una oportunidad.", icon: "fa-solid fa-fire", bgGradient: "from-red-500/25 to-orange-600/20", iconColor: "text-red-400", borderCol: "border-red-500/30", fullText: "Sesgo psicológico que impulsa a comprar activos impulsivamente cuando ya han subido demasiado en el mercado.", tip: "Nunca operes basándote en emociones de FOMO." },
+            { id: 13, title: "FUD", summary: "Miedo, incertidumbre y duda generados.", icon: "fa-solid fa-triangle-exclamation", bgGradient: "from-yellow-500/25 to-amber-600/20", iconColor: "text-yellow-400", borderCol: "border-yellow-500/30", fullText: "Clima informativo negativo diseñado para generar pánico en inversores novatos y provocar ventas masivas.", tip: "Investiga la fuente de noticias antes de vender en pánico." },
+            { id: 14, title: "Gas Fees", summary: "Tarifas pagadas para procesar transacciones.", icon: "fa-solid fa-gas-pump", bgGradient: "from-pink-500/25 to-rose-600/20", iconColor: "text-pink-400", borderCol: "border-pink-500/30", fullText: "Comisiones que compensan la potencia computacional requerida por validadores en redes como Ethereum.", tip: "Transacciona en horas de menor congestión para ahorrar." },
+            { id: 15, title: "Mining", summary: "Validación y seguridad por prueba de trabajo.", icon: "fa-solid fa-pickaxe", bgGradient: "from-stone-500/25 to-neutral-600/20", iconColor: "text-stone-300", borderCol: "border-stone-500/30", fullText: "Uso de hardware especializado para resolver acertijos matemáticos y añadir bloques a cambio de recompensas.", tip: "Requiere alto consumo energético y equipos ASIC." },
+            { id: 16, title: "Staking", summary: "Bloqueo de criptomonedas para validar red.", icon: "fa-solid fa-lock", bgGradient: "from-teal-500/25 to-emerald-600/20", iconColor: "text-teal-400", borderCol: "border-teal-500/30", fullText: "En redes Proof-of-Stake, los usuarios bloquean monedas en el protocolo obteniendo un rendimiento porcentual anual.", tip: "Excelente alternativa de ingresos pasivos a largo plazo." },
+            { id: 17, title: "Whale", summary: "Inversor que posee una cantidad masiva de cripto.", icon: "fa-solid fa-fish", bgGradient: "from-blue-600/25 to-cyan-700/20", iconColor: "text-cyan-400", borderCol: "border-cyan-500/30", fullText: "Entidades con poder para influir significativamente en el precio del mercado debido al volumen de capital que mueven.", tip: "Monitorear ballenas ayuda a anticipar giros de tendencia." },
+            { id: 18, title: "DAO", summary: "Organización Autónoma Descentralizada.", icon: "fa-solid fa-users", bgGradient: "from-violet-500/25 to-purple-600/20", iconColor: "text-violet-400", borderCol: "border-violet-500/30", fullText: "Entidad sin jerarquía donde las decisiones estratégicas se toman mediante votaciones con tokens de gobernanza.", tip: "El poder de voto es proporcional a los tokens poseídos." },
+            { id: 19, title: "Layer 2", summary: "Redes secundarias de velocidad y bajo costo.", icon: "fa-solid fa-layer-group", bgGradient: "from-sky-500/25 to-blue-600/20", iconColor: "text-sky-400", borderCol: "border-sky-500/30", fullText: "Soluciones como Arbitrum u Optimism que procesan transacciones fuera de la cadena principal para ganar eficiencia.", tip: "Esencial para la escalabilidad masiva de Ethereum." },
+            { id: 20, title: "NFT", summary: "Token no fungible de propiedad digital única.", icon: "fa-solid fa-image", bgGradient: "from-fuchsia-500/25 to-pink-600/20", iconColor: "text-fuchsia-400", borderCol: "border-fuchsia-500/30", fullText: "Activo digital irrepetible que certifica fehacientemente la propiedad de arte, coleccionables o accesos.", tip: "Utilizados en arte digital y acreditaciones de membresías." },
+            { id: 21, title: "Bear Market", summary: "Mercado bajista de caídas prolongadas.", icon: "fa-solid fa-arrow-trend-down", bgGradient: "from-red-600/25 to-rose-700/20", iconColor: "text-red-400", borderCol: "border-red-500/30", fullText: "Periodo donde los precios caen un 20% o más desde sus máximos históricos durante meses o años.", tip: "Los mejores proyectos de largo plazo se acumulan aquí." },
+            { id: 22, title: "Bull Market", summary: "Mercado alcista de optimismo y subidas.", icon: "fa-solid fa-arrow-trend-up", bgGradient: "from-emerald-500/25 to-green-600/20", iconColor: "text-emerald-400", borderCol: "border-emerald-500/30", fullText: "Fase de euforia donde la entrada masiva de capital empuja los precios a nuevos máximos históricos.", tip: "Momento clave para tomar ganancias parciales." },
+            { id: 23, title: "ATH", summary: "Máximo histórico de cotización alcanzado.", icon: "fa-solid fa-mountain-sun", bgGradient: "from-amber-500/25 to-orange-600/20", iconColor: "text-amber-400", borderCol: "border-amber-500/30", fullText: "Punto más alto al que ha cotizado una criptomoneda desde su lanzamiento en mercados públicos.", tip: "Romper un ATH anterior suele desatar fuertes impulsos." },
+            { id: 24, title: "DEX", summary: "Exchange Descentralizado por contratos inteligentes.", icon: "fa-solid fa-right-left", bgGradient: "from-teal-500/25 to-cyan-600/20", iconColor: "text-teal-300", borderCol: "border-teal-500/30", fullText: "Plataformas como Uniswap que permiten intercambiar criptoactivos directamente desde tu propia billetera.", tip: "Ofrecen mayor privacidad pero requieren precaución web3." },
+            { id: 25, title: "CEX", summary: "Exchange Centralizado administrado por empresa.", icon: "fa-solid fa-building-columns", bgGradient: "from-blue-600/25 to-indigo-700/20", iconColor: "text-blue-300", borderCol: "border-blue-500/30", fullText: "Plataformas como Binance que actúan como intermediarios custodios para compraventa con dinero fiat.", tip: "Ideales para principiantes por su facilidad de uso." },
+            { id: 26, title: "Seed Phrase", summary: "Frase semilla de recuperación secreta.", icon: "fa-solid fa-key", bgGradient: "from-yellow-500/25 to-amber-600/20", iconColor: "text-yellow-300", borderCol: "border-yellow-500/30", fullText: "Llave maestra absoluta de tus fondos. Quien la posea tiene control total sobre tus criptomonedas.", tip: "Nunca la compartas en línea ni hagas capturas." },
+            { id: 27, title: "Market Cap", summary: "Capitalización de mercado total del proyecto.", icon: "fa-solid fa-pie-chart", bgGradient: "from-indigo-500/25 to-purple-600/20", iconColor: "text-indigo-300", borderCol: "border-indigo-500/30", fullText: "Se calcula multiplicando el precio actual por el suministro circulante total, determinando la relevancia del proyecto.", tip: "Baja capitalización implica más potencial pero más riesgo." },
+            { id: 28, title: "Arbitraje", summary: "Explotar diferencias de precio entre exchanges.", icon: "fa-solid fa-scale-unbalanced", bgGradient: "from-violet-500/25 to-fuchsia-600/20", iconColor: "text-violet-300", borderCol: "border-violet-500/30", fullText: "Comprar un activo más barato en un mercado y venderlo más caro en otro casi simultáneamente para ganar la diferencia.", tip: "Requiere velocidad y automatización." },
+            { id: 29, title: "Tokenomics", summary: "Modelo económico y distribución de tokens.", icon: "fa-solid fa-chart-pie", bgGradient: "from-rose-500/25 to-pink-600/20", iconColor: "text-rose-300", borderCol: "border-rose-500/30", fullText: "Analiza la oferta total, inflación, utilidades, periodos de bloqueo y quema para evaluar sostenibilidad.", tip: "Un tokenomics deficiente puede hundir un gran proyecto." },
+            { id: 30, title: "ICO / IDO", summary: "Recaudación inicial de fondos para proyectos.", icon: "fa-solid fa-rocket", bgGradient: "from-orange-500/25 to-red-600/20", iconColor: "text-orange-300", borderCol: "border-orange-500/30", fullText: "Permiten a inversores adquirir tokens antes de su salida pública a precios preferenciales en preventas.", tip: "Alto riesgo de estafa o fracaso del proyecto." },
+            { id: 31, title: "Memecoin", summary: "Criptomoneda inspirada en memes de internet.", icon: "fa-solid fa-face-laugh-squint", bgGradient: "from-yellow-400/25 to-orange-500/20", iconColor: "text-yellow-200", borderCol: "border-yellow-400/30", fullText: "Proyectos como Dogecoin impulsados por la comunidad, marketing viral y especulación pura en redes.", tip: "Pueden generar grandes ganancias o colapsar rápido." },
+            { id: 32, title: "Web3", summary: "La nueva generación de internet descentralizada.", icon: "fa-solid fa-globe", bgGradient: "from-cyan-500/25 to-blue-600/20", iconColor: "text-cyan-200", borderCol: "border-cyan-500/30", fullText: "Busca devolver el control de los datos y la identidad digital a los usuarios, eliminando gigantes tecnológicos.", tip: "Integra criptomonedas y soberanía digital." },
+            // 15 CONCEPTOS ADICIONALES
+            { id: 33, title: "Mempool", summary: "Sala de espera para transacciones pendientes.", icon: "fa-solid fa-hourglass-half", bgGradient: "from-slate-500/25 to-zinc-600/20", iconColor: "text-slate-300", borderCol: "border-slate-500/30", fullText: "Área de memoria temporal donde se acumulan las transacciones de los usuarios antes de ser empaquetadas en bloques.", tip: "Monitorear la mempool ayuda a calcular comisiones óptimas." },
+            { id: 34, title: "Sharding", summary: "Partición de base de datos para escalar redes.", icon: "fa-solid fa-puzzle-piece", bgGradient: "from-emerald-500/25 to-cyan-600/20", iconColor: "text-emerald-300", borderCol: "border-emerald-500/30", fullText: "Divide la blockchain en múltiples particiones independientes que procesan transacciones en paralelo.", tip: "Solución clave para el trilema de la escalabilidad." },
+            { id: 35, title: "Zero-Knowledge", summary: "Pruebas de validez sin revelar información.", icon: "fa-solid fa-user-secret", bgGradient: "from-purple-500/25 to-indigo-600/20", iconColor: "text-purple-300", borderCol: "border-purple-500/30", fullText: "Permiten demostrar que una afirmación es verdadera sin revelar ningún detalle o dato confidencial adicional.", tip: "Tecnología revolucionaria para la privacidad financiera." },
+            { id: 36, title: "Yield Farming", summary: "Maximización de rendimientos en DeFi.", icon: "fa-solid fa-wheat-awn", bgGradient: "from-amber-500/25 to-lime-600/20", iconColor: "text-amber-300", borderCol: "border-amber-500/30", fullText: "Estrategia avanzada donde los usuarios despliegan criptomonedas en protocolos buscando altas tasas de interés.", tip: "Requiere monitoreo constante por fluctuación de APYs." },
+            { id: 37, title: "Imperilament Loss", summary: "Pérdida temporal al proveer liquidez en DEX.", icon: "fa-solid fa-chart-line-down", bgGradient: "from-rose-500/25 to-orange-600/20", iconColor: "text-rose-300", borderCol: "border-rose-500/30", fullText: "Ocurre cuando el precio de los tokens depositados en un fondo de liquidez cambia frente al momento inicial.", tip: "Evalúa bien el riesgo en pares altamente volátiles." },
+            { id: 38, title: "Cold Storage", summary: "Almacenamiento offline seguro de claves.", icon: "fa-solid fa-shield-halved", bgGradient: "from-blue-600/25 to-teal-700/20", iconColor: "text-blue-300", borderCol: "border-blue-500/30", fullText: "Método donde las llaves privadas nunca se conectan a internet, protegiendo contra hackeos remotos.", tip: "Indispensable para guardar montos considerables." },
+            { id: 39, title: "Hash Rate", summary: "Poder computacional de seguridad de red.", icon: "fa-solid fa-microchip", bgGradient: "from-cyan-600/25 to-blue-700/20", iconColor: "text-cyan-300", borderCol: "border-cyan-500/30", fullText: "Mide la cantidad de cálculos por segundo que realizan los equipos de minería para asegurar Proof-of-Work.", tip: "Un hashrate alto indica mayor robustez de red." },
+            { id: 40, title: "RSI Indicator", summary: "Índice de Fuerza Relativa de sobrecompra.", icon: "fa-solid fa-gauge-high", bgGradient: "from-indigo-500/25 to-pink-600/20", iconColor: "text-indigo-300", borderCol: "border-indigo-500/30", fullText: "Oscilador que mide la velocidad y cambio de precios en escala de 0 a 100 para detectar giros de tendencia.", tip: "Valores >70 sobrecompra; <30 sobreventa." },
+            { id: 41, title: "MACD", summary: "Convergencia y divergencia de medias móviles.", icon: "fa-solid fa-wave-square", bgGradient: "from-teal-500/25 to-blue-600/20", iconColor: "text-teal-300", borderCol: "border-teal-500/30", fullText: "Herramienta técnica que ayuda a identificar cambios en la fuerza, dirección y impulso del precio.", tip: "Los cruces de líneas MACD son señales clásicas." },
+            { id: 42, title: "Liquidation", summary: "Cierre forzoso de posición por falta de margen.", icon: "fa-solid fa-triangle-exclamation", bgGradient: "from-red-500/25 to-rose-700/20", iconColor: "text-red-300", borderCol: "border-red-500/30", fullText: "Sucede cuando el mercado va en contra de una posición apalancada y el margen se agota por completo.", tip: "Usa siempre stop-loss para evitar liquidaciones." },
+            { id: 43, title: "Cross Margin", summary: "Garantía compartida en toda la cuenta.", icon: "fa-solid fa-arrows-split-up-and-left", bgGradient: "from-orange-500/25 to-yellow-600/20", iconColor: "text-orange-300", borderCol: "border-orange-500/30", fullText: "Modo donde el saldo de la cuenta se comparte entre todas las posiciones abiertas para evitar liquidación.", tip: "Ofrece resistencia pero compromete todo tu capital." },
+            { id: 44, title: "Isolated Margin", summary: "Aislamiento de margen por operación.", icon: "fa-solid fa-shield", bgGradient: "from-green-500/25 to-teal-600/20", iconColor: "text-green-300", borderCol: "border-green-500/30", fullText: "Modo donde el riesgo se limita únicamente al monto específico asignado a esa posición abierta.", tip: "Recomendado para controlar estrictamente el riesgo." },
+            { id: 45, title: "Slippage", summary: "Diferencia frente al precio real de ejecución.", icon: "fa-solid fa-bolt", bgGradient: "from-amber-500/25 to-yellow-600/20", iconColor: "text-amber-300", borderCol: "border-amber-500/30", fullText: "Ocurre cuando una orden se ejecuta a precio diferente debido a alta volatilidad o baja liquidez.", tip: "Configura tolerancia adecuada en DEXs." },
+            { id: 46, title: "Rug Pull", summary: "Estafa donde creadores retiran la liquidez.", icon: "fa-solid fa-skull-crossbones", bgGradient: "from-red-600/25 to-zinc-800/20", iconColor: "text-red-400", borderCol: "border-red-500/30", fullText: "Fraude común donde desarrolladores retiran repentinamente la liquidez del pool, dejando tokens sin valor.", tip: "Verifica siempre que la liquidez esté bloqueada." },
+            { id: 47, title: "Vesting", summary: "Liberación gradual y programada de tokens.", icon: "fa-solid fa-clock", bgGradient: "from-blue-500/25 to-indigo-600/20", iconColor: "text-blue-300", borderCol: "border-blue-500/30", fullText: "Mecanismo que restringe la venta inmediata de tokens asignados a fundadores o inversores durante un periodo.", tip: "Previene caídas masivas por presión de venta." }
+        ];
 
-        // Function to render video carousel
-        function renderVideoCarousel() {
-            const container = document.getElementById('videos-carousel');
-            container.innerHTML = '';
+        let currentVideoIndex = 0;
 
-            videosData.forEach((video, index) => {
-                const isActive = index === activeVideoIndex;
-                const card = document.createElement('div');
-                card.className = `flex-shrink-0 w-28 h-36 rounded-2xl bg-cardBg border ${isActive ? video.glowClass : 'border-gray-800'} p-2.5 flex flex-col justify-between cursor-pointer transition-all hover:scale-105 relative overflow-hidden group`;
-                
-                card.innerHTML = `
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
-                    <div class="flex justify-between items-center z-10">
-                        <div class="w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-xs ${isActive ? 'text-cyan-400 animate-pulse' : 'text-gray-400'}">
-                            <i class="fa-solid fa-play"></i>
-                        </div>
-                        <span class="text-[10px] font-mono text-gray-400 bg-black/40 px-1.5 py-0.5 rounded">${video.duration}</span>
-                    </div>
-                    <div class="z-10">
-                        <div class="w-7 h-7 rounded-lg bg-gray-800/80 flex items-center justify-center mb-1.5 shadow">
-                            <i class="fa-solid ${video.icon.split(' ')[0]} ${video.icon.split(' ')[1]} text-xs"></i>
-                        </div>
-                        <h4 class="text-xs font-bold text-white line-clamp-2 leading-tight">${video.title}</h4>
-                    </div>
-                `;
-
-                card.addEventListener('click', () => {
-                    selectVideo(index);
-                });
-
-                container.appendChild(card);
-            });
-        }
-
-        // Select and load video into main player
-        function selectVideo(index) {
-            activeVideoIndex = index;
-            const video = videosData[index];
-            
-            // Update iframe src
-            const iframe = document.getElementById('main-video-iframe');
-            iframe.src = `https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&mute=0&controls=1`;
-
-            // Update info
-            document.getElementById('current-video-title').innerText = video.title;
-            document.getElementById('current-video-category').innerText = video.category;
-            document.getElementById('current-video-subtitle').innerText = video.subtitle;
-            document.getElementById('total-time').innerText = `/ ${video.duration}`;
-            
-            renderVideoCarousel();
-        }
-
-        // Render Ticker with duplicated items for smooth infinite scrolling
-        function renderTicker() {
-            const tickerContainer = document.getElementById('crypto-ticker');
-            tickerContainer.innerHTML = '';
-
-            // Double the array to ensure smooth continuous marquee animation loop
-            const duplicatedCryptos = [...cryptos, ...cryptos, ...cryptos];
-
-            duplicatedCryptos.forEach(crypto => {
-                const isPositive = crypto.change >= 0;
-                const item = document.createElement('div');
-                item.className = 'flex items-center space-x-2.5 bg-cardBg border border-gray-800/80 px-3 py-2 rounded-xl flex-shrink-0 shadow-sm min-w-[140px]';
-                
-                item.innerHTML = `
-                    <div class="w-7 h-7 rounded-lg bg-gray-800/60 flex items-center justify-center ${crypto.color}">
-                        <i class="${crypto.icon} text-sm"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center space-x-1.5">
-                            <span class="text-xs font-bold text-white">${crypto.symbol}</span>
-                            <span class="text-[10px] ${isPositive ? 'text-emerald-400 bg-emerald-950/40' : 'text-red-400 bg-red-950/40'} px-1 rounded font-medium">
-                                ${isPositive ? '+' : ''}${crypto.change}%
-                            </span>
-                        </div>
-                        <div class="text-xs font-mono font-semibold text-gray-300">$${crypto.price.toLocaleString('en-US', { minimumFractionDigits: crypto.price < 1 ? 4 : 2 })}</div>
-                    </div>
-                `;
-                tickerContainer.appendChild(item);
-            });
-        }
-
-        // Real-time price simulation fluctuation
-        function simulateRealTimePrices() {
-            cryptos = cryptos.map(crypto => {
-                const fluctuationPercent = (Math.random() * 0.6 - 0.29) / 100; // -0.3% to +0.3%
-                let newPrice = crypto.price * (1 + fluctuationPercent);
-                let newChange = crypto.change + (Math.random() * 0.1 - 0.05);
-                
-                return {
-                    ...crypto,
-                    price: Number(newPrice.toFixed(crypto.price < 1 ? 4 : 2)),
-                    change: Number(newChange.toFixed(2))
-                };
-            });
-            renderTicker();
-        }
-
-        // Initialize on load
         window.onload = function() {
+            renderCryptoTicker();
+            renderVideoCarousel();
+            renderConceptsCarousel(conceptosClave);
             selectVideo(0);
-            renderTicker();
-            
-            // Update crypto prices every 3 seconds for real-time feel
-            setInterval(simulateRealTimePrices, 3000);
         };
+
+        function renderCryptoTicker() {
+            const container = document.getElementById('cryptoTickerContainer');
+            let html = '';
+            const items = [...criptomonedas, ...criptomonedas];
+            
+            items.forEach(crypto => {
+                html += `
+                    <div class="flex items-center space-x-2.5 bg-slate-900/90 border border-slate-800/80 px-3 py-2 rounded-xl shrink-0 shadow-sm">
+                        <div class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-sm">
+                            <i class="${crypto.icon}"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="font-bold text-xs text-white">${crypto.symbol}</span>
+                                <span class="text-[10px] font-semibold ${crypto.positive ? 'text-emerald-400' : 'text-red-400'}">${crypto.change}</span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 font-medium">${crypto.price}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderVideoCarousel() {
+            const container = document.getElementById('videoCarouselContainer');
+            document.getElementById('totalClassesBadge').innerText = `${videoclases.length} CLASES`;
+            let html = '';
+
+            videoclases.forEach((video, index) => {
+                const isActive = index === currentVideoIndex;
+                html += `
+                    <div onclick="selectVideo(${index})" class="w-40 shrink-0 bg-slate-900/90 border ${isActive ? 'border-cyan-400 glow-cyan' : 'border-slate-800'} rounded-2xl p-2.5 cursor-pointer hover:border-slate-700 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="relative aspect-video rounded-xl overflow-hidden bg-slate-950 mb-2">
+                                <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition" onerror="this.src='https://placehold.co/400x225/1e293b/38bdf8?text=Video'">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-cyan-500/90 text-white flex items-center justify-center text-xs shadow-md">
+                                        <i class="fa-solid fa-play ml-0.5"></i>
+                                    </div>
+                                </div>
+                                <span class="absolute bottom-1 right-1 bg-black/70 backdrop-blur-sm text-[10px] text-white font-semibold px-1.5 py-0.5 rounded">${video.duration}</span>
+                            </div>
+                            <h4 class="font-bold text-xs text-white line-clamp-2">${video.title}</h4>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                            <span class="text-[10px] text-slate-400 font-medium truncate">${video.category}</span>
+                            ${video.progressPercent > 0 ? `<span class="text-[10px] text-cyan-400 font-bold">${video.progressPercent}%</span>` : '<span class="text-[10px] text-slate-500">Nuevo</span>'}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function selectVideo(index) {
+            currentVideoIndex = index;
+            const video = videoclases[index];
+            
+            document.getElementById('currentVideoTitle').innerText = video.title;
+            document.getElementById('currentVideoTitleOverlay').innerText = video.title;
+            document.getElementById('currentVideoDesc').innerText = video.description;
+            document.getElementById('currentVideoCategory').innerText = video.category;
+            document.getElementById('currentVideoBadge').innerText = video.category;
+            document.getElementById('videoCurrentTime').innerText = video.currentTime;
+            document.getElementById('videoDuration').innerText = video.duration;
+            document.getElementById('videoProgress').style.width = `${video.progressPercent}%`;
+
+            const iframe = document.getElementById('activeVideoIframe');
+            iframe.src = `https://www.youtube.com/embed/${video.youtubeId}?autoplay=0&mute=0`;
+
+            renderVideoCarousel();
+            showToast(`Cargada: ${video.title}`);
+        }
+
+        function playVideo() {
+            const video = videoclases[currentVideoIndex];
+            showToast(`Reproduciendo: ${video.title}`);
+        }
+
+        function renderConceptsCarousel(list) {
+            const container = document.getElementById('conceptsCarouselContainer');
+            if (list.length === 0) {
+                container.innerHTML = `<div class="w-full py-8 text-center text-slate-500 text-xs">No se encontraron conceptos clave.</div>`;
+                return;
+            }
+
+            let html = '';
+            list.forEach(item => {
+                html += `
+                    <div onclick="openConceptModal(${item.id})" class="w-44 shrink-0 bg-slate-900/90 border border-slate-800 hover:border-cyan-500/40 rounded-2xl p-3.5 cursor-pointer transition group flex flex-col justify-between shadow-sm hover:shadow-md hover:bg-slate-850">
+                        <div>
+                            <div class="flex items-center justify-between mb-2.5">
+                                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr ${item.bgGradient} ${item.iconColor} flex items-center justify-center text-base border ${item.borderCol} shadow-inner group-hover:scale-110 transition">
+                                    <i class="${item.icon}"></i>
+                                </div>
+                                <span class="text-[10px] text-slate-500 font-mono">#${item.id}</span>
+                            </div>
+                            <h4 class="font-bold text-white text-xs mb-1 group-hover:text-cyan-400 transition line-clamp-1">${item.title}</h4>
+                            <p class="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">${item.summary}</p>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-slate-800/60 flex items-center justify-between text-[10px] text-cyan-400 font-semibold">
+                            <span>Ver info</span>
+                            <i class="fa-solid fa-arrow-right text-[9px] transform group-hover:translate-x-1 transition"></i>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function filterConcepts(query) {
+            const q = query.toLowerCase().trim();
+            const filtered = conceptosClave.filter(c => 
+                c.title.toLowerCase().includes(q) || c.summary.toLowerCase().includes(q)
+            );
+            renderConceptsCarousel(filtered);
+        }
+
+        function openConceptModal(id) {
+            const concept = conceptosClave.find(c => c.id === id);
+            if (!concept) return;
+
+            document.getElementById('modalTitle').innerText = concept.title;
+            document.getElementById('modalDescription').innerText = concept.summary;
+            document.getElementById('modalFullText').innerText = concept.fullText;
+            document.getElementById('modalTip').innerText = concept.tip;
+            document.getElementById('modalIcon').className = `${concept.icon} ${concept.iconColor}`;
+            document.getElementById('modalIconBg').className = `w-10 h-10 rounded-xl bg-gradient-to-tr ${concept.bgGradient} flex items-center justify-center text-lg border ${concept.borderCol} shadow-md`;
+
+            const modal = document.getElementById('conceptModal');
+            const modalContent = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('conceptModal');
+            const modalContent = document.getElementById('modalContent');
+            modalContent.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function toggleMenu() {
+            showToast("Menú de opciones de Criptoacademia");
+        }
+
+        function showAllVideos() {
+            showToast("Mostrando catálogo completo de 21 videoclases");
+        }
+
+        function joinVIP() {
+            showToast("Redirigiendo al canal VIP de Telegram...");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
     </script>
 </body>
 </html>
