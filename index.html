@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Crypto Academy - Telegram Mini App</title>
+    <title>Crypto Academy Telegram Mini App</title>
     <!-- Favicon fácilmente modificable para la cabecera -->
     <link rel="icon" id="app-favicon" href="https://placehold.co/64x64/007aff/ffffff?text=CA">
     <!-- Tailwind CSS CDN -->
@@ -28,6 +28,15 @@
                     boxShadow: {
                         'neon': '0 0 20px rgba(0, 242, 254, 0.7), inset 0 0 10px rgba(0, 242, 254, 0.4)',
                         'neon-glow': '0 0 15px rgba(127, 0, 255, 0.6)'
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        }
+                    },
+                    animation: {
+                        marquee: 'marquee 30s linear infinite',
                     }
                 }
             }
@@ -55,6 +64,7 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start select-none pb-12">
 
+    <!-- Cabecera Estilo Telegram -->
     <header class="w-full max-w-md bg-tg-card/90 backdrop-blur-md px-4 py-3 flex items-center justify-between sticky top-0 z-50 border-b border-tg-border">
         <div class="flex items-center space-x-3">
             <button onclick="goBack()" class="w-9 h-9 rounded-full bg-tg-bg flex items-center justify-center text-gray-300 hover:text-white transition">
@@ -63,7 +73,7 @@
             <div>
                 <h1 class="font-bold text-base text-white tracking-wide">Crypto Academy</h1>
                 <p class="text-xs text-emerald-400 flex items-center gap-1">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Vimeo Official Mini App
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Canal Oficial Telegram
                 </p>
             </div>
         </div>
@@ -77,55 +87,60 @@
         </div>
     </header>
 
+    <!-- Contenedor Principal Adaptable -->
     <main class="w-full max-w-md flex flex-col px-3 pt-3 space-y-4">
 
+        <!-- Reproductor de Video Superior (YouTube y Vimeo) -->
         <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-tg-border group">
             <div id="video-container" class="w-full h-full flex items-center justify-center">
-                <!-- Se inyecta dinámicamente el iframe de Vimeo -->
+                <iframe id="main-video-player" class="w-full h-full border-0" src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <!-- Overlay superior de título -->
-            <div class="absolute top-3 left-3 right-3 flex justify-between items-center pointer-events-none z-10">
+            <div class="absolute top-3 left-3 right-3 flex justify-between items-center pointer-events-none">
                 <span id="current-video-title" class="bg-black/70 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-lg border border-white/10 font-medium">1. Intro to Bitcoin</span>
-                <span class="bg-tg-accent/90 text-white text-[10px] px-2.5 py-0.5 rounded font-bold">VIMEO HD</span>
+                <span class="bg-tg-accent/90 text-white text-[10px] px-2.5 py-0.5 rounded font-bold">PRO HD</span>
             </div>
-            <!-- Barra inferior de reproducción simulada -->
-            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent px-4 py-2.5 flex items-center justify-between text-xs text-gray-300 z-10">
-                <span id="player-current-time">00:00</span>
+            <!-- Barra inferior de reproducción -->
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent px-4 py-2.5 flex items-center justify-between text-xs text-gray-300">
+                <span id="player-current-time">05:42</span>
                 <div class="flex-1 mx-3 h-1.5 bg-white/20 rounded-full overflow-hidden cursor-pointer" onclick="seekVideo(event)">
                     <div id="player-progress-bar" class="h-full bg-gradient-to-r from-tg-neonBlue to-tg-accent w-[35%] rounded-full relative"></div>
                 </div>
-                <span id="player-total-time">/ 15:20</span>
+                <span id="player-total-time">/ 18:22</span>
             </div>
         </div>
 
+        <!-- Sección de Videoclases (21 Clases con Neón y Miniaturas) -->
         <div class="space-y-2">
             <div class="flex justify-between items-center px-1">
                 <h2 class="text-sm font-bold text-gray-200 uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-graduation-cap text-tg-neonBlue"></i> Videoclases Vimeo (<span id="total-classes-count">21</span>)
+                    <i class="fa-solid fa-graduation-cap text-tg-neonBlue"></i> Videoclases (<span id="total-classes-count">21</span>)
                 </h2>
                 <span class="text-xs text-tg-neonBlue font-semibold cursor-pointer hover:underline" onclick="toggleAllVideosModal()">Ver catálogo</span>
             </div>
             <!-- Carrusel horizontal de videoclases -->
             <div id="video-carousel" class="flex space-x-3 overflow-x-auto no-scrollbar py-2 px-1 scroll-smooth">
-                <!-- Inyectado dinámicamente vía JavaScript -->
+                <!-- Inyectado dinámicamente -->
             </div>
         </div>
 
+        <!-- Sección de 40 Conceptos Clave -->
         <div class="space-y-2">
             <div class="flex justify-between items-center px-1">
                 <h2 class="text-sm font-bold text-gray-200 uppercase tracking-wider flex items-center gap-2">
                     <i class="fa-solid fa-lightbulb text-amber-400"></i> 40 Conceptos Clave
                 </h2>
-                <span class="text-xs text-gray-400">Resumen de exactamente 8 líneas</span>
+                <span class="text-xs text-gray-400">Resumen de 8 líneas por concepto</span>
             </div>
 
             <!-- Carrusel horizontal de Conceptos Clave -->
             <div id="concepts-carousel" class="flex space-x-3 overflow-x-auto no-scrollbar py-2 px-1 scroll-smooth">
-                <!-- Inyectado dinámicamente vía JavaScript -->
+                <!-- Se llena mediante JS con los 40 conceptos profesionales -->
             </div>
         </div>
 
-        <div class="pt-2 pb-4">
+        <!-- Botón Azul Inferior "Unirme" -->
+        <div class="pt-2 pb-2">
             <button onclick="openTradingViewModal()" class="w-full py-4 px-6 bg-gradient-to-r from-blue-600 via-tg-accent to-tg-neonBlue text-white font-bold rounded-2xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform active:scale-95 transition flex items-center justify-center space-x-3 text-base border border-white/20">
                 <i class="fa-solid fa-chart-candlestick text-xl animate-bounce"></i>
                 <span>Unirme & Ver Gráficos en Tiempo Real</span>
@@ -135,6 +150,7 @@
 
     </main>
 
+    <!-- MODAL DE CONCEPTO CLAVE (Resumen exacto de 8 líneas) -->
     <div id="concept-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity duration-300">
         <div class="bg-tg-card w-full max-w-md rounded-t-3xl sm:rounded-2xl border border-tg-border p-6 space-y-4 max-h-[85vh] overflow-y-auto transform transition-transform duration-300 translate-y-full" id="concept-modal-content">
             <div class="flex justify-between items-start">
@@ -165,6 +181,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE GRÁFICOS DE VELAS JAPONESAS (Botón "Unirme") -->
     <div id="tradingview-modal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex flex-col hidden">
         <div class="bg-tg-card border-b border-tg-border px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -172,7 +189,7 @@
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
                 <div>
-                    <h2 class="font-bold text-white text-base">Gráficos de Velas Pro - CoinMarketCap Data</h2>
+                    <h2 class="font-bold text-white text-base">Gráficos de Velas Pro - CMC API</h2>
                     <p class="text-xs text-emerald-400">BTC, ETH, SOL, BNB, XRP en tiempo real</p>
                 </div>
             </div>
@@ -191,9 +208,9 @@
             <!-- Widget TradingView -->
         </div>
 
-        <div class="bg-tg-card border-t border-tg-border p-3 flex justify-between items-center text-xs">
+        <div class="bg-tg-card border-t border-tg-border p-3 flex justify-around items-center text-xs">
             <div class="flex items-center gap-1.5 text-emerald-400 font-bold">
-                <i class="fa-solid fa-signal"></i> <span>Sincronizado CMC API</span>
+                <i class="fa-solid fa-signal"></i> <span>Conectado a CoinMarketCap Data</span>
             </div>
             <button onclick="closeTradingViewModal()" class="px-5 py-2 bg-tg-accent text-white font-bold rounded-xl shadow">
                 Volver a Clases
@@ -201,10 +218,11 @@
         </div>
     </div>
 
+    <!-- MODAL CATÁLOGO COMPLETO DE VIDEOCLASES -->
     <div id="all-videos-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col hidden">
         <div class="bg-tg-card border-b border-tg-border px-4 py-3 flex items-center justify-between">
             <h2 class="font-bold text-white text-base flex items-center gap-2">
-                <i class="fa-solid fa-list text-tg-neonBlue"></i> Catálogo Vimeo (21 Videoclases)
+                <i class="fa-solid fa-list text-tg-neonBlue"></i> Catálogo Completo (21 Videoclases)
             </h2>
             <button onclick="toggleAllVideosModal()" class="w-8 h-8 rounded-full bg-tg-bg flex items-center justify-center text-gray-400 hover:text-white transition">
                 <i class="fa-solid fa-xmark"></i>
@@ -216,32 +234,32 @@
     </div>
 
     <script>
-        // Array completo de las 21 Videoclases configuradas exclusivamente con enlaces de Vimeo
+        // Array completo de las 21 Videoclases (Soporta YouTube y Vimeo públicos y privados)
         const videoClasses = [
-            { id: 1, title: "1. Intro to Bitcoin", duration: "10:24", url: "https://player.vimeo.com/video/1231004615?h=5cb2d35456", thumb: "https://placehold.co/120x80/1e293b/00f2fe?text=BTC+Vimeo", icon: "fa-brands fa-bitcoin" },
-            { id: 2, title: "2. Trading Pairs", duration: "14:15", url: "https://player.vimeo.com/video/517066550?h=523c52e008&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/7f00ff?text=Pairs", icon: "fa-solid fa-right-left" },
-            { id: 3, title: "3. Altcoin Analysis", duration: "11:50", url: "https://player.vimeo.com/video/148751763?h=8360d2b109&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/00f2fe?text=Alt", icon: "fa-solid fa-coins" },
-            { id: 4, title: "4. Advanced TA", duration: "16:30", url: "https://player.vimeo.com/video/22439234?h=4b971e41f7&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/ef4444?text=TA", icon: "fa-solid fa-chart-line" },
-            { id: 5, title: "5. Futures Basics", duration: "12:10", url: "https://player.vimeo.com/video/1084537?h=a5d10d9e2a&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/10b981?text=Fut", icon: "fa-solid fa-bolt" },
-            { id: 6, title: "6. DeFi Yields", duration: "15:40", url: "https://player.vimeo.com/video/76979871?h=8272103f4e&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/8b5cf6?text=DeFi", icon: "fa-solid fa-seedling" },
-            { id: 7, title: "7. Risk Management", duration: "09:30", url: "https://player.vimeo.com/video/517066550?h=523c52e008&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/f59e0b?text=Risk", icon: "fa-solid fa-shield-halved" },
-            { id: 8, title: "8. Smart Contracts", duration: "18:20", url: "https://player.vimeo.com/video/148751763?h=8360d2b109&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/3b82f6?text=Smart", icon: "fa-solid fa-file-contract" },
-            { id: 9, title: "9. NFT Ecosystem", duration: "13:15", url: "https://player.vimeo.com/video/22439234?h=4b971e41f7&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/ec4899?text=NFT", icon: "fa-solid fa-image" },
-            { id: 10, title: "10. Layer 2 Scaling", duration: "16:00", url: "https://player.vimeo.com/video/1084537?h=a5d10d9e2a&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/6366f1?text=L2", icon: "fa-solid fa-layer-group" },
-            { id: 11, title: "11. Web3 Wallets", duration: "11:20", url: "https://player.vimeo.com/video/76979871?h=8272103f4e&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/14b8a6?text=Wallet", icon: "fa-solid fa-wallet" },
-            { id: 12, title: "12. Tokenomics", duration: "14:50", url: "https://player.vimeo.com/video/517066550?h=523c52e008&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/f43f5e?text=TKN", icon: "fa-solid fa-pie-chart" },
-            { id: 13, title: "13. Staking Mastery", duration: "10:45", url: "https://player.vimeo.com/video/148751763?h=8360d2b109&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/84cc16?text=Stake", icon: "fa-solid fa-coins" },
-            { id: 14, title: "14. Crypto Tax Guide", duration: "15:10", url: "https://player.vimeo.com/video/22439234?h=4b971e41f7&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/64748b?text=Tax", icon: "fa-solid fa-file-invoice-dollar" },
-            { id: 15, title: "15. On-Chain Metrics", duration: "19:00", url: "https://player.vimeo.com/video/1084537?h=a5d10d9e2a&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/06b6d4?text=OnChain", icon: "fa-solid fa-cubes" },
-            { id: 16, title: "16. Liquidity Pools", duration: "12:30", url: "https://player.vimeo.com/video/76979871?h=8272103f4e&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/d946ef?text=Pools", icon: "fa-solid fa-water" },
-            { id: 17, title: "17. Market Psych", duration: "17:25", url: "https://player.vimeo.com/video/517066550?h=523c52e008&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/eab308?text=Psy", icon: "fa-solid fa-brain" },
-            { id: 18, title: "18. Cross-Chain", duration: "13:40", url: "https://player.vimeo.com/video/148751763?h=8360d2b109&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/38bdf8?text=Bridge", icon: "fa-solid fa-bridge" },
-            { id: 19, title: "19. Arbitrage Tactics", duration: "14:20", url: "https://player.vimeo.com/video/22439234?h=4b971e41f7&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/a855f7?text=Arb", icon: "fa-solid fa-scale-balanced" },
-            { id: 20, title: "20. DAO Governance", duration: "11:55", url: "https://player.vimeo.com/video/1084537?h=a5d10d9e2a&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/10b981?text=DAO", icon: "fa-solid fa-users-rectangle" },
-            { id: 21, title: "21. Crypto Security", duration: "20:00", url: "https://player.vimeo.com/video/76979871?h=8272103f4e&autoplay=1", thumb: "https://placehold.co/120x80/1e293b/ef4444?text=Sec", icon: "fa-solid fa-lock" }
+            { id: 1, title: "1. Intro to Bitcoin", duration: "10:24", type: "youtube", url: "https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/00f2fe?text=BTC", icon: "fa-brands fa-bitcoin" },
+            { id: 2, title: "2. Trading Pairs", duration: "14:15", type: "youtube", url: "https://www.youtube.com/embed/3JZ_D3ELwOQ?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/7f00ff?text=Pairs", icon: "fa-solid fa-right-left" },
+            { id: 3, title: "3. Altcoin Analysis", duration: "11:50", type: "vimeo", url: "https://player.vimeo.com/video/76979871?h=8272103f4e", thumb: "https://placehold.co/120x80/1e293b/00f2fe?text=Alt", icon: "fa-solid fa-coins" },
+            { id: 4, title: "4. Advanced TA", duration: "16:30", type: "youtube", url: "https://www.youtube.com/embed/L_LUpnjgPso?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/ef4444?text=TA", icon: "fa-solid fa-chart-line" },
+            { id: 5, title: "5. Futures Basics", duration: "12:10", type: "youtube", url: "https://www.youtube.com/embed/tgbNymZ7vqY?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/10b981?text=Fut", icon: "fa-solid fa-bolt" },
+            { id: 6, title: "6. DeFi Yield Farming", duration: "15:40", type: "vimeo", url: "https://player.vimeo.com/video/517066550?h=523c52e008", thumb: "https://placehold.co/120x80/1e293b/8b5cf6?text=DeFi", icon: "fa-solid fa-seedling" },
+            { id: 7, title: "7. Risk Management", duration: "09:30", type: "youtube", url: "https://www.youtube.com/embed/kJQP7kiw5Fk?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/f59e0b?text=Risk", icon: "fa-solid fa-shield-halved" },
+            { id: 8, title: "8. Smart Contracts", duration: "18:20", type: "youtube", url: "https://www.youtube.com/embed/apzXGEbZht0?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/3b82f6?text=Smart", icon: "fa-solid fa-file-contract" },
+            { id: 9, title: "9. NFT Ecosystem", duration: "13:15", type: "vimeo", url: "https://player.vimeo.com/video/148751763?h=8360d2b109", thumb: "https://placehold.co/120x80/1e293b/ec4899?text=NFT", icon: "fa-solid fa-image" },
+            { id: 10, title: "10. Layer 2 Scaling", duration: "16:00", type: "youtube", url: "https://www.youtube.com/embed/y8IH6ghgTgs?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/6366f1?text=L2", icon: "fa-solid fa-layer-group" },
+            { id: 11, title: "11. Web3 Wallets", duration: "11:20", type: "youtube", url: "https://www.youtube.com/embed/CZ3wIuvmHeM?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/14b8a6?text=Wallet", icon: "fa-solid fa-wallet" },
+            { id: 12, title: "12. Tokenomics 101", duration: "14:50", type: "youtube", url: "https://www.youtube.com/embed/5sLQkZNkCs8?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/f43f5e?text=TKN", icon: "fa-solid fa-pie-chart" },
+            { id: 13, title: "13. Staking Mastery", duration: "10:45", type: "vimeo", url: "https://player.vimeo.com/video/22439234?h=4b971e41f7", thumb: "https://placehold.co/120x80/1e293b/84cc16?text=Stake", icon: "fa-solid fa-coins" },
+            { id: 14, title: "14. Crypto Tax Guide", duration: "15:10", type: "youtube", url: "https://www.youtube.com/embed/GKei4BNv3aA?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/64748b?text=Tax", icon: "fa-solid fa-file-invoice-dollar" },
+            { id: 15, title: "15. On-Chain Metrics", duration: "19:00", type: "youtube", url: "https://www.youtube.com/embed/a8g7fdcWqoo?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/06b6d4?text=OnChain", icon: "fa-solid fa-cubes" },
+            { id: 16, title: "16. Liquidity Pools", duration: "12:30", type: "vimeo", url: "https://player.vimeo.com/video/1084537?h=a5d10d9e2a", thumb: "https://placehold.co/120x80/1e293b/d946ef?text=Pools", icon: "fa-solid fa-water" },
+            { id: 17, title: "17. Market Psychology", duration: "17:25", type: "youtube", url: "https://www.youtube.com/embed/2Vv-BfVoq4g?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/eab308?text=Psy", icon: "fa-solid fa-brain" },
+            { id: 18, title: "18. Cross-Chain Bridges", duration: "13:40", type: "youtube", url: "https://www.youtube.com/embed/3JZ_D3ELwOQ?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/38bdf8?text=Bridge", icon: "fa-solid fa-bridge" },
+            { id: 19, title: "19. Arbitrage Tactics", duration: "14:20", type: "youtube", url: "https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/a855f7?text=Arb", icon: "fa-solid fa-scale-balanced" },
+            { id: 20, title: "20. DAO Governance", duration: "11:55", type: "vimeo", url: "https://player.vimeo.com/video/76979871?h=8272103f4e", thumb: "https://placehold.co/120x80/1e293b/10b981?text=DAO", icon: "fa-solid fa-users-rectangle" },
+            { id: 21, title: "21. Crypto Security", duration: "20:00", type: "youtube", url: "https://www.youtube.com/embed/L_LUpnjgPso?enablejsapi=1", thumb: "https://placehold.co/120x80/1e293b/ef4444?text=Sec", icon: "fa-solid fa-lock" }
         ];
 
-        // 40 Conceptos Clave Profesionales (Cada uno con resumen exacto de 8 líneas)
+        // 40 Conceptos Clave Profesionales (Cada uno con resumen técnico exacto de 8 líneas)
         const keyConcepts = [
             { id: 1, title: "Blockchain", icon: "fa-solid fa-link", color: "from-blue-500 to-cyan-500", summary: [
                 "1. Base de datos distribuida y descentralizada que registra transacciones en bloques encadenados.",
@@ -351,7 +369,8 @@
             renderVideoCarousel();
             renderAllVideosModal();
             renderKeyConceptsCarousel();
-            selectVideo(1); // Cargar video de Vimeo por defecto
+            
+            // Inicializar TradingView para el modal de gráficos
             initTradingViewWidget("BINANCE:BTCUSDT");
         }
 
@@ -361,11 +380,11 @@
             videoClasses.forEach(video => {
                 const isActive = video.id === currentActiveVideoId;
                 const card = document.createElement('div');
-                card.className = `flex-shrink-0 w-32 bg-tg-card rounded-xl p-2 border-2 cursor-pointer transition transform active:scale-95 flex flex-col items-center justify-between relative group ${isActive ? 'border-tg-neonBlue shadow-neon ring-2 ring-tg-neonBlue/50' : 'border-tg-border hover:border-gray-500'}`;
+                card.className = `flex-shrink-0 w-32 bg-tg-card rounded-xl p-2 border-2 cursor-pointer transition transform active:scale-95 flex flex-col items-center justify-between relative group ${isActive ? 'border-tg-neonBlue shadow-neon' : 'border-tg-border hover:border-gray-500'}`;
                 card.onclick = () => selectVideo(video.id);
                 card.innerHTML = `
                     <div class="relative w-full aspect-video rounded-lg overflow-hidden bg-black/40 mb-2">
-                        <img src="${video.thumb}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='https://placehold.co/120x80/1e293b/00f2fe?text=Vimeo+Video'">
+                        <img src="${video.thumb}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='https://placehold.co/120x80/1e293b/00f2fe?text=Video'">
                         <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
                             <div class="w-7 h-7 rounded-full bg-tg-accent/90 text-white flex items-center justify-center text-xs shadow">
                                 <i class="fa-solid fa-play ml-0.5"></i>
@@ -377,7 +396,7 @@
                         <p class="text-[11px] font-bold text-white truncate w-full">${video.title}</p>
                         <div class="flex items-center justify-center gap-1 mt-1">
                             <i class="${video.icon} text-xs text-tg-neonBlue"></i>
-                            <span class="text-[9px] text-gray-400 capitalize">Vimeo HD</span>
+                            <span class="text-[9px] text-gray-400 capitalize">${video.type}</span>
                         </div>
                     </div>
                 `;
@@ -394,8 +413,11 @@
             const titleEl = document.getElementById('current-video-title');
             titleEl.textContent = video.title;
 
-            // Reproductor dedicado exclusivamente a Vimeo
-            playerContainer.innerHTML = `<iframe id="main-video-player" class="w-full h-full border-0" src="${video.url}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+            if (video.type === 'youtube') {
+                playerContainer.innerHTML = `<iframe id="main-video-player" class="w-full h-full border-0" src="${video.url}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            } else if (video.type === 'vimeo') {
+                playerContainer.innerHTML = `<iframe id="main-video-player" class="w-full h-full border-0" src="${video.url}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+            }
 
             renderVideoCarousel();
             renderAllVideosModal();
@@ -421,7 +443,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <h4 class="text-xs font-bold text-white truncate">${video.title}</h4>
-                        <p class="text-[10px] text-gray-400 mt-0.5 uppercase">Vimeo • ${video.duration}</p>
+                        <p class="text-[10px] text-gray-400 mt-0.5 uppercase">${video.type} • ${video.duration}</p>
                     </div>
                     <div class="w-7 h-7 rounded-full bg-tg-bg flex items-center justify-center text-tg-neonBlue">
                         <i class="fa-solid fa-chevron-right text-xs"></i>
@@ -537,11 +559,13 @@
         }
 
         function openInfoModal() {
-            console.log("Crypto Academy Telegram Mini App - Vimeo Edition");
+            alert("Crypto Academy Telegram Mini App v3.1");
         }
 
         function goBack() {
-            window.close();
+            if (confirm("¿Deseas salir de la Mini App de Telegram?")) {
+                window.close();
+            }
         }
     </script>
 </body>
